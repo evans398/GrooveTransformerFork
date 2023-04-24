@@ -202,13 +202,11 @@ class AutoEncoder(nn.Module):
     def __init__(self, config, device):
         super().__init__()
 
-        self.device = device
-
         # Layers
         # ---------------------------------------------------
-        self.Encoder = Encoder(config.input_dim, config.encoder_first_dim, config.latent_dim, device).to(self.device)
-        self.Decoder = Decoder(config.latent_dim, config.decoder_output_dim, device).to(self.device)
-        self.OutputLayer = OutputLayer(config.decoder_output_dim, config.output_dim, device).to(self.device)
+        self.Encoder = Encoder(config.input_dim, config.encoder_first_dim, config.latent_dim, device)
+        self.Decoder = Decoder(config.latent_dim, config.decoder_output_dim, device)
+        self.OutputLayer = OutputLayer(config.decoder_output_dim, config.output_dim, device)
 
     def forward(self, input_data):
         encoded_data = self.Encoder(input_data)
