@@ -335,9 +335,9 @@ if __name__ == "__main__":
 
     for i in range(config.epochs):
         print(f"Epoch {i+1}")
-        train_loss_dict = train_loop(auto_encoder, train_data_loader, bce_with_logits_loss_fn, adam_optimiser, "cuda" if torch.cuda.is_available() else "cpu")
+        train_loss_dict = train_loop(auto_encoder, train_data_loader, bce_with_logits_loss_fn, adam_optimiser, gpu1 if torch.cuda.is_available() else "cpu")
         wandb.log(train_loss_dict, commit=False)
-        test_loss_dict = test_loop(auto_encoder, test_data_loader, bce_with_logits_loss_fn, adam_optimiser, "cuda" if torch.cuda.is_available() else "cpu")
+        test_loss_dict = test_loop(auto_encoder, test_data_loader, bce_with_logits_loss_fn, adam_optimiser, gpu1 if torch.cuda.is_available() else "cpu")
         wandb.log(test_loss_dict, commit=False)
         wandb.log({"epoch": i}, commit=True)
         print("-------------------")
