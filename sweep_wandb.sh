@@ -16,5 +16,5 @@ module load Anaconda3/2020.02
 
 source activate GrooveTransformer
 
-wandb wandb agent nick-evans398/AE-Practice/k8kpukop
+wandb agent nick-evans398/AE-Practice/k8kpukop
 # python AutoEncoder.py
