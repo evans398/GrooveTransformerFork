@@ -326,7 +326,8 @@ if __name__ == "__main__":
     test_data_loader = DataLoader(testing_data, batch_size=config.batch_size, shuffle=True)
 
     # initialize model
-    auto_encoder = AutoEncoder(config).to("cuda" if torch.cuda.is_available() else "cpu")
+    gpu1 = torch.device("cuda")
+    auto_encoder = AutoEncoder(config).to(gpu1 if torch.cuda.is_available() else "cpu")
 
     # instantiate loss fn and optimiser
     bce_with_logits_loss_fn = nn.BCEWithLogitsLoss()
