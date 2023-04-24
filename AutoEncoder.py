@@ -109,8 +109,12 @@ class Encoder(nn.Module):
         assert np.log2(encoder_first_dim).is_integer(), "First dim should be power of 2"
         assert np.log2(latent_dim).is_integer(), "latent dim should be power of 2"
 
-        n_layers = int(np.log2(max(encoder_first_dim, latent_dim) / min(encoder_first_dim, latent_dim)))
-        scale_dim_by = 2 if latent_dim > encoder_first_dim else 0.5
+        if encoder_first_dim == latent_dim:
+            n_layers = 1
+            scale_dim_by = 1
+        else:
+            n_layers = int(np.log2(max(encoder_first_dim, latent_dim) / min(encoder_first_dim, latent_dim)))
+            scale_dim_by = 2 if latent_dim > encoder_first_dim else 0.5
         self.flatten = nn.Flatten()
 
         self.layers = []
@@ -145,13 +149,12 @@ class Decoder(nn.Module):
         assert np.log2(decoder_output_dim).is_integer(), "Output dim should be power of 2"
         assert np.log2(latent_dim).is_integer(), "Latent dim should be power of 2"
 
-        n_layers = int(np.log2(max(latent_dim, decoder_output_dim) / min(latent_dim, decoder_output_dim)))
-        if decoder_output_dim > latent_dim:
-            scale_dim_by = 2
-        elif decoder_output_dim < latent_dim:
-            scale_dim_by = 0.5
-        else:
+        if decoder_output_dim == latent_dim:
+            n_layers = 1
             scale_dim_by = 1
+        else:
+            n_layers = int(np.log2(max(latent_dim, decoder_output_dim) / min(latent_dim, decoder_output_dim)))
+            scale_dim_by = 2 if decoder_output_dim > latent_dim else 0.5
 
         self.layers = []
 
