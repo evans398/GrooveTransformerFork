@@ -106,6 +106,8 @@ class Encoder(nn.Module):
     def __init__(self, input_dim, encoder_first_dim, latent_dim, device):
         super().__init__()
 
+        self.device = device
+
         assert np.log2(encoder_first_dim).is_integer(), "First dim should be power of 2"
         assert np.log2(latent_dim).is_integer(), "latent dim should be power of 2"
 
@@ -146,6 +148,8 @@ class Decoder(nn.Module):
     def __init__(self, latent_dim, decoder_output_dim, device):
         super().__init__()
 
+        self.device = device
+
         assert np.log2(decoder_output_dim).is_integer(), "Output dim should be power of 2"
         assert np.log2(latent_dim).is_integer(), "Latent dim should be power of 2"
 
@@ -160,7 +164,7 @@ class Decoder(nn.Module):
 
         # decoder
         for i in range(n_layers):
-            self.layers.append(nn.Linear(latent_dim, int(latent_dim * scale_dim_by)).to(device))
+            self.layers.append(nn.Linear(latent_dim, int(latent_dim * scale_dim_by)).to(self.device))
             latent_dim = int(latent_dim * scale_dim_by)
         print(self.layers)
 
@@ -178,10 +182,12 @@ class OutputLayer(nn.Module):
     def __init__(self, decoder_output_dim, output_dim, device):
         super().__init__()
 
+        self.device = device
+
         # final output
-        self.linear_h = nn.Linear(decoder_output_dim, output_dim).to(device)
-        self.linear_v = nn.Linear(decoder_output_dim, output_dim).to(device)
-        self.linear_o = nn.Linear(decoder_output_dim, output_dim).to(device)
+        self.linear_h = nn.Linear(decoder_output_dim, output_dim).to(self.device)
+        self.linear_v = nn.Linear(decoder_output_dim, output_dim).to(self.device)
+        self.linear_o = nn.Linear(decoder_output_dim, output_dim).to(self.device)
 
     def forward(self, decoded_data):
         h = self.linear_h(decoded_data)
@@ -196,11 +202,13 @@ class AutoEncoder(nn.Module):
     def __init__(self, config, device):
         super().__init__()
 
+        self.device = device
+
         # Layers
         # ---------------------------------------------------
-        self.Encoder = Encoder(config.input_dim, config.encoder_first_dim, config.latent_dim, device).to(device)
-        self.Decoder = Decoder(config.latent_dim, config.decoder_output_dim, device).to(device)
-        self.OutputLayer = OutputLayer(config.decoder_output_dim, config.output_dim, device).to(device)
+        self.Encoder = Encoder(config.input_dim, config.encoder_first_dim, config.latent_dim, device).to(self.device)
+        self.Decoder = Decoder(config.latent_dim, config.decoder_output_dim, device).to(self.device)
+        self.OutputLayer = OutputLayer(config.decoder_output_dim, config.output_dim, device).to(self.device)
 
     def forward(self, input_data):
         encoded_data = self.Encoder(input_data)
