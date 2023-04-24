@@ -2,7 +2,7 @@
 #SBATCH -J sweep_small
 #SBATCH -p medium
 #SBATCH -N 1
-#SBATCH --gres=gpu:tesla:1
+#SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=16g
 #SBATCH --time=24:00
